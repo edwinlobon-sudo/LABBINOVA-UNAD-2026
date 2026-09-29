@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>City Pulse & People: Navigating Urban Life (A2 Level - Saber 11)</title>
+  <style>
+    :root {
+      --unad-blue: #003366;
+      --unad-yellow: #fdb813;
+      --unad-orange: #f37021;
+      --bg-light: #f0f4f8;
+      --card-bg: #ffffff;
+      --text-color: #1e293b;
+      --correct: #10b981;
+      --incorrect: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--unad-blue), #001e3d);
+      color: white;
+      padding: 25px 20px;
+      text-align: center;
+      border-bottom: 5px solid var(--unad-yellow);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      color: var(--unad-yellow);
+      margin-bottom: 5px;
+    }
+
+    header h2 {
+      font-size: 1.1rem;
+      font-weight: 300;
+      opacity: 0.9;
+    }
+
+    .audio-controls {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.15);
+      padding: 8px 15px;
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .audio-btn {
+      background: var(--unad-yellow);
+      border: none;
+      color: var(--unad-blue);
+      padding: 6px 12px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.85rem;
+      transition: transform 0.2s;
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border-left: 6px solid var(--unad-blue);
+    }
+
+    .card h3 {
+      color: var(--unad-blue);
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* MÓDULO EXPLICATIVO VISUAL */
+    .visual-grammar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .v-card {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .v-card h4 {
+      color: var(--unad-blue);
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    .v-card svg {
+      width: 100%;
+      height: 140px;
+      border-radius: 8px;
+      background: #e2e8f0;
+      margin-bottom: 10px;
+    }
+
+    /* RULETA INTERACTIVA */
+    .wheel-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    #wheelCanvas {
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+    .spin-btn {
+      background: linear-gradient(135deg, var(--unad-orange), #d9534f);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(243, 112, 33, 0.3);
+      transition: all 0.2s;
+    }
+
+    .spin-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .feelings-msg {
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #0369a1;
+      display: none;
+    }
+
+    /* DRAG AND DROP CON NUEVOS SVG ILUSTRATIVOS */
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      background: #f8fafc;
+      padding: 18px;
+      border-radius: 12px;
+      border: 2px dashed #cbd5e1;
+      margin-bottom: 25px;
+    }
+
+    .draggable {
+      background: var(--unad-blue);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: grab;
+      font-weight: 600;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    .grid-places {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    .place-box {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .place-box svg {
+      width: 100%;
+      height: 170px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .drop-target {
+      min-height: 45px;
+      border: 2px dashed var(--unad-orange);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      font-weight: bold;
+      color: var(--unad-blue);
+    }
+
+    /* MAPA RESTAURADO COMPLETO SVG */
+    .map-frame {
+      background: #e8f5e9;
+      border: 4px solid var(--unad-blue);
+      border-radius: 15px;
+      padding: 12px;
+      margin-bottom: 25px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .map-svg {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* FORMULARIOS Y OPCIONES */
+    .sentence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sentence-card {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 10px;
+      border-left: 4px solid var(--unad-yellow);
+      font-size: 1.05rem;
+    }
+
+    select {
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      font-weight: bold;
+      color: var(--unad-blue);
+      background: white;
+      cursor: pointer;
+    }
+
+    .btn-check {
+      background: linear-gradient(135deg, var(--unad-blue), #004080);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 20px auto 0;
+    }
+
+    /* QUIZ FINAL SABER 11 */
+    .quiz-q {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--unad-blue);
+    }
+
+    .quiz-q p {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .quiz-options label {
+      display: block;
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      border: 1px solid #cbd5e1;
+      cursor: pointer;
+    }
+
+    /* SPEAKING SECTION */
+    .speaking-box {
+      background: #fffbe6;
+      border: 2px solid var(--unad-yellow);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .mic-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-box {
+      display: none;
+      background: #f0fdf4;
+      border: 2px solid var(--correct);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .score-badge-icfes {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: var(--unad-orange);
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>City Pulse & People</h1>
+    <h2>Navigating Urban Life (A2 Level) - Saber 11 Edition - LabINNOVA</h2>
+    <div class="audio-controls">
+      <span style="font-size: 0.85rem; color: white;">🎶 Ambient Sound:</span>
+      <button class="audio-btn" id="toggleAudioBtn" onclick="toggleAmbientSound()">Play Ambient Music</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- SECCIÓN 1: EXPLICACIÓN GRAMATICAL VISUAL -->
+    <div class="card" style="border-left-color: var(--unad-yellow);">
+      <h3>🖼️ Visual Grammar Corner (Explicación Gráfica)</h3>
+      <p>Observa la ilustración gráfica de cada concepto gramatical:</p>
+      
+      <div class="visual-grammar-grid">
+        <div class="v-card">
+          <h4>1. There is (Singular) vs There are (Plural)</h4>
+          <svg viewBox="0 0 300 140">
+            <rect width="300" height="140" fill="#e2e8f0"/>
+            <rect x="20" y="40" width="80" height="70" fill="#a855f7" rx="5"/>
+            <text x="60" y="125" font-size="11" fill="#003366" text-anchor="middle" font-weight="bold">There is a church</text>
+            <rect x="150" y="40" width="55" height="70" fill="#22c55e" rx="5"/>
+            <rect x="220" y="40" width="55" height="70" fill="#22c55e" rx="5"/>
+            <text x="212" y="125" font-size="11" fill="#003366" text-anchor="middle" font-weight="bold">There are two parks</text>
+          </svg>
+        </div>
+
+        <div class="v-card">
+          <h4>2. Prepositions of Place</h4>
+          <svg viewBox="0 0 300 140">
+            <rect width="300" height="140" fill="#f1f5f9"/>
+            <rect x="20" y="30" width="50" height="50" fill="#f59e0b" rx="4"/>
+            <rect x="75" y="30" width="50" height="50" fill="#3b82f6" rx="4"/>
+            <text x="72" y="100" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">NEXT TO</text>
+            <rect x="180" y="60" width="90" height="20" fill="#38bdf8"/>
+            <rect x="200" y="45" width="50" height="30" fill="#b45309" rx="3"/>
+            <text x="225" y="100" font-size="11" font-weight="bold" fill="#1e293b" text-anchor="middle">ABOVE</text>
+          </svg>
+        </div>
+
+        <div class="v-card">
+          <h4>3. Verb To Be + Feelings & Jobs</h4>
+          <svg viewBox="0 0 300 140">
+            <rect width="300" height="140" fill="#fef3c7"/>
+            <circle cx="80" cy="50" r="25" fill="#fde047" stroke="#ca8a04" stroke-width="2"/>
+            <text x="80" y="55" font-size="18" text-anchor="middle">😊</text>
+            <text x="80" y="100" font-size="11" font-weight="bold" fill="#003366" text-anchor="middle">She IS happy</text>
+            <rect x="190" y="25" width="50" height="50" fill="#ef4444" rx="25"/>
+            <text x="215" y="55" font-size="20" text-anchor="middle" fill="#fff">👨‍⚕️</text>
+            <text x="215" y="100" font-size="11" font-weight="bold" fill="#003366" text-anchor="middle">He IS a doctor</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- WARM-UP: RULETA DE EMOCIONES -->
+    <div class="card">
+      <h3>🎡 Warm-Up: How do you feel today?</h3>
+      <p>Gira la ruleta para descubrir tu estado emocional y estructurar tu oración con el verbo <strong>To Be</strong>.</p>
+      
+      <div class="wheel-container">
+        <canvas id="wheelCanvas" width="280" height="280"></canvas>
+        <button class="spin-btn" onclick="spinWheel()">Spin the Wheel!</button>
+      </div>
+
+      <div class="feelings-msg" id="feelingsResult"></div>
+    </div>
+
+    <!-- TAREA 1: LUGARES DE LA CIUDAD CON ILUSTRACIONES VISUALES RICAS Y CLARAS -->
+    <div class="card">
+      <h3>🏙️ Task 1: Places in the City</h3>
+      <p>Observa las ilustraciones detalladas (sin texto) y arrastra la palabra correspondiente a la caja vacía:</p>
+      
+      <div class="word-bank" id="wordBank">
+        <div class="draggable" draggable="true" id="w-bridge">Bridge</div>
+        <div class="draggable" draggable="true" id="w-postoffice">Post Office</div>
+        <div class="draggable" draggable="true" id="w-bakery">Bakery</div>
+        <div class="draggable" draggable="true" id="w-museum">Museum</div>
+        <div class="draggable" draggable="true" id="w-busstop">Bus Stop</div>
+        <div class="draggable" draggable="true" id="w-shoppingmall">Shopping Mall</div>
+      </div>
+
+      <div class="grid-places">
+        
+        <!-- BRIDGE (Puente sobre el agua con estructura metálica) -->
+        <div class="place-box">
+          <svg viewBox="0 0 300 170">
+            <rect width="300" height="170" fill="#e0f2fe"/>
+            <!-- Río / Agua -->
+            <path d="M 0 120 Q 75 105 150 120 T 300 120 L 300 170 L 0 170 Z" fill="#0284c7"/>
+            <path d="M 0 140 Q 75 130 150 140 T 300 140 L 300 170 L 0 170 Z" fill="#0369a1"/>
+            <!-- Estructura del Puente -->
+            <rect x="30" y="70" width="240" height="20" fill="#78350f" rx="4"/>
+            <path d="M 30 70 Q 150 10 270 70" stroke="#b45309" stroke-width="8" fill="none"/>
+            <line x1="80" y1="90" x2="80" y2="150" stroke="#451a03" stroke-width="12"/>
+            <line x1="220" y1="90" x2="220" y2="150" stroke="#451a03" stroke-width="12"/>
+            <line x1="80" y1="60" x2="80" y2="70" stroke="#b45309" stroke-width="4"/>
+            <line x1="120" y1="42" x2="120" y2="70" stroke="#b45309" stroke-width="4"/>
+            <line x1="180" y1="42" x2="180" y2="70" stroke="#b45309" stroke-width="4"/>
+            <line x1="220" y1="60" x2="220" y2="70" stroke="#b45309" stroke-width="4"/>
+          </svg>
+          <div class="drop-target" data-match="Bridge">Drop here</div>
+        </div>
+
+        <!-- POST OFFICE (Edificio con buzón rojo y sobres volando) -->
+        <div class="place-box">
+          <svg viewBox="0 0 300 170">
+            <rect width="300" height="170" fill="#f1f5f9"/>
+            <rect x="40" y="40" width="180" height="110" fill="#2563eb" rx="6"/>
+            <polygon points="130,10 30,40 230,40" fill="#1d4ed8"/>
+            <rect x="110" y="80" width="40" height="70" fill="#93c5fd"/>
+            <!-- Buzón Postal Rojo -->
+            <rect x="235" y="85" width="35" height="65" fill="#dc2626" rx="8"/>
+            <rect x="242" y="95" width="21" height="6" fill="#1e293b"/>
+            <!-- Sobre volando -->
+            <rect x="180" y="25" width="35" height="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" rx="2"/>
+            <path d="M 180 25 L 197 38 L 215 25" stroke="#ef4444" stroke-width="2" fill="none"/>
+          </svg>
+          <div class="drop-target" data-match="Post Office">Drop here</div>
+        </div>
+
+        <!-- BAKERY (Edificio con gran pan francés baguette, croissant y trigales) -->
+        <div class="place-box">
+          <svg viewBox="0 0 300 170">
+            <rect width="300" height="170" fill="#fef3c7"/>
+            <rect x="50" y="50" width="200" height="100" fill="#d97706" rx="6"/>
+            <!-- Toldo de Panadería -->
+            <path d="M 40 50 L 260 50 L 240 25 L 60 25 Z" fill="#b45309"/>
+            <!-- Baguette Grande arriba -->
+            <ellipse cx="150" cy="20" rx="60" ry="12" fill="#f59e0b" stroke="#78350f" stroke-width="3"/>
+            <line x1="120" y1="18" x2="130" y2="24" stroke="#78350f" stroke-width="3"/>
+            <line x1="145" y1="18" x2="155" y2="24" stroke="#78350f" stroke-width="3"/>
+            <line x1="170" y1="18" x2="180" y2="24" stroke="#78350f" stroke-width="3"/>
+            <!-- Croissants en la vitrina -->
+            <path d="M 90 90 Q 105 75 120 90 Q 105 100 90 90 Z" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+            <path d="M 180 90 Q 195 75 210 90 Q 195 100 180 90 Z" fill="#fbbf24" stroke="#b45309" stroke-width="2"/>
+          </svg>
+          <div class="drop-target" data-match="Bakery">Drop here</div>
+        </div>
+
+        <!-- MUSEUM (Fachada de templo romano + Fósil/Esqueleto de Dinosaurio T-Rex) -->
+        <div class="place-box">
+          <svg viewBox="0 0 300 170">
+            <rect width="300" height="170" fill="#f8fafc"/>
+            <polygon points="150,10 30,40 270,40" fill="#475569"/>
+            <rect x="50" y="40" width="200" height="110" fill="#94a3b8"/>
+            <line x1="75" y1="40" x2="75" y2="150" stroke="#cbd5e1" stroke-width="10"/>
+            <line x1="225" y1="40" x2="225" y2="150" stroke="#cbd5e1" stroke-width="10"/>
+            <!-- Esqueleto T-Rex de Dinosaurio en el centro del museo -->
+            <path d="M 120 110 Q 135 70 160 80 Q 185 70 190 85 Q 175 95 160 90 L 150 120" stroke="#1e293b" stroke-width="4" fill="none"/>
+            <circle cx="185" cy="78" r="8" fill="#1e293b"/>
+            <!-- Costillas Fósiles -->
+            <line x1="140" y1="95" x2="155" y2="105" stroke="#1e293b" stroke-width="3"/>
+            <line x1="143" y1="102" x2="158" y2="112" stroke="#1e293b" stroke-width="3"/>
+            <!-- Visitante explorador -->
+            <circle cx="105" cy="120" r="5" fill="#f59e0b"/>
+            <line x1="105" y1="125" x2="105" y2="145" stroke="#f59e0b" stroke-width="3"/>
+          </svg>
+          <div class="drop-target" data-match="Museum">Drop here</div>
+        </div>
+
+        <!-- BUS STOP (Autobús grande amarillo con ruedas + Parada de Bus azul) -->
+        <div class="place-box">
+          <svg viewBox="0 0 300 170">
+            <rect width="300" height="170" fill="#e2e8f0"/>
+            <!-- Autobús Urbano Grande -->
+            <rect x="20" y="45" width="170" height="90" fill="#eab308" rx="10"/>
+            <rect x="35" y="60" width="35" height="30" fill="#38bdf8" rx="3"/>
+            <rect x="80" y="60" width="35" height="30" fill="#38bdf8" rx="3"/>
+            <rect x="125" y="60" width="35" height="30" fill="#38bdf8" rx="3"/>
+            <circle cx="55" cy="135" r="16" fill="#1e293b"/>
+            <circle cx="55" cy="135" r="7" fill="#94a3b8"/>
+            <circle cx="155" cy="135" r="16" fill="#1e293b"/>
+            <circle cx="155" cy="135" r="7" fill="#94a3b8"/>
+            <!-- Marquesina de Parada de Autobús -->
+            <rect x="220" y="35" width="60" height="110" fill="#0284c7" rx="4"/>
+            <rect x="225" y="45" width="50" height="40" fill="#bae6fd" rx="2"/>
+            <circle cx="250" cy="110" r="8" fill="#fde047"/>
+          </svg>
+          <div class="drop-target" data-match="Bus Stop">Drop here</div>
+        </div>
+
+        <!-- SHOPPING MALL (Centro Comercial con parqueadero abajo y personas comprando con bolsas) -->
+        <div class="place-box">
+          <svg viewBox="0 0 300 170">
+            <rect width="300" height="170" fill="#f1f5f9"/>
+            <!-- Edificio Mall -->
+            <rect x="30" y="15" width="240" height="110" fill="#0d9488" rx="8"/>
+            <rect x="50" y="35" width="60" height="50" fill="#ccfbf1"/>
+            <rect x="190" y="35" width="60" height="50" fill="#ccfbf1"/>
+            <!-- Estacionamiento / Vehículos abajo -->
+            <rect x="30" y="125" width="240" height="35" fill="#64748b"/>
+            <line x1="30" y1="125" x2="270" y2="125" stroke="#fde047" stroke-width="2" stroke-dasharray="8,8"/>
+            <rect x="45" y="132" width="30" height="18" fill="#ef4444" rx="3"/>
+            <rect x="225" y="132" width="30" height="18" fill="#3b82f6" rx="3"/>
+            <!-- Personas caminando en familia con bolsas de compras -->
+            <!-- Persona 1 -->
+            <circle cx="130" cy="95" r="5" fill="#f43f5e"/>
+            <line x1="130" y1="100" x2="130" y2="118" stroke="#f43f5e" stroke-width="3"/>
+            <path d="M 124 108 L 120 115" stroke="#f59e0b" stroke-width="3"/> <!-- Bolsa de compras -->
+            <rect x="116" y="112" width="8" height="10" fill="#f59e0b"/>
+            <!-- Persona 2 -->
+            <circle cx="150" cy="92" r="5" fill="#8b5cf6"/>
+            <line x1="150" y1="97" x2="150" y2="118" stroke="#8b5cf6" stroke-width="3"/>
+            <rect x="154" y="110" width="8" height="10" fill="#10b981"/> <!-- Bolsa de compras -->
+          </svg>
+          <div class="drop-target" data-match="Shopping Mall">Drop here</div>
+        </div>
+
+      </div>
+
+      <button class="btn-check" onclick="checkTask1()">Check Task 1</button>
+      <div class="result-box" id="resTask1">
+        <div class="score-badge-icfes" id="score1" style="font-size:1.8rem;">0 / 6</div>
+        <p id="msg1"></p>
+      </div>
+    </div>
+
+    <!-- TAREA 2: MAPA COMPLETO DEL BARRIO RESTAURADO -->
+    <div class="card">
+      <h3>🗺️ Task 2: Neighborhood Map & Prepositions Navigation</h3>
+      <p>Examina detenidamente el mapa vectorial del barrio y completa las 7 oraciones seleccionando la existencia (<strong>There is / There are</strong>) y la <strong>preposición de lugar</strong> correspondiente[cite: 3]:</p>
+      
+      <!-- MAPA RESTAURADO COMPLETO SVG -->
+      <div class="map-frame">
+        <svg class="map-svg" viewBox="0 0 900 550" xmlns="http://www.w3.org/2000/svg">
+          <rect width="900" height="550" fill="#c8e6c9" rx="10"/>
+          
+          <!-- Río en la parte inferior -->
+          <path d="M 0 460 Q 450 440 900 460 L 900 550 L 0 550 Z" fill="#4fc3f7"/>
+          <text x="450" y="510" font-size="16" font-weight="bold" fill="#0277bd" text-anchor="middle">~ RIVER ~</text>
+
+          <!-- Calles Principales -->
+          <rect x="0" y="240" width="900" height="60" fill="#78909c"/>
+          <line x1="0" y1="270" x2="900" y2="270" stroke="#fff" stroke-dasharray="15,15" stroke-width="3"/>
+          
+          <rect x="260" y="0" width="60" height="460" fill="#78909c"/>
+          <line x1="290" y1="0" x2="290" y2="460" stroke="#fff" stroke-dasharray="15,15" stroke-width="3"/>
+
+          <rect x="600" y="0" width="60" height="460" fill="#78909c"/>
+          <line x1="630" y1="0" x2="630" y2="460" stroke="#fff" stroke-dasharray="15,15" stroke-width="3"/>
+
+          <!-- PUENTE sobre el río -->
+          <rect x="250" y="440" width="80" height="70" fill="#8d6e63" rx="5"/>
+          <line x1="250" y1="440" x2="250" y2="510" stroke="#3e2723" stroke-width="5"/>
+          <line x1="330" y1="440" x2="330" y2="510" stroke="#3e2723" stroke-width="5"/>
+          <text x="290" y="480" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">BRIDGE</text>
+
+          <!-- EDIFICIOS Y LUGARES -->
+          <rect x="30" y="30" width="90" height="80" fill="#ab47bc" rx="8"/>
+          <text x="75" y="75" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">CHURCH</text>
+          
+          <rect x="135" y="30" width="90" height="80" fill="#ffb74d" rx="8"/>
+          <text x="180" y="75" font-size="14" font-weight="bold" fill="#5d4037" text-anchor="middle">BAKERY</text>
+
+          <rect x="340" y="30" width="230" height="180" fill="#81c784" stroke="#388e3c" stroke-width="4" rx="10"/>
+          <circle cx="455" cy="120" r="30" fill="#4fc3f7"/>
+          <text x="455" y="190" font-size="16" font-weight="bold" fill="#1b5e20" text-anchor="middle">CENTRAL PARK</text>
+
+          <rect x="340" y="320" width="230" height="100" fill="#e57373" rx="8"/>
+          <text x="455" y="375" font-size="18" font-weight="bold" fill="#fff" text-anchor="middle">SCHOOL</text>
+
+          <rect x="210" y="245" width="40" height="20" fill="#ffeb3b" rx="3"/>
+          <rect x="150" y="245" width="40" height="20" fill="#ffeb3b" rx="3"/>
+          <rect x="180" y="210" width="70" height="25" fill="#ff9800" rx="4"/>
+          <text x="215" y="227" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">BUS STOP</text>
+
+          <rect x="680" y="30" width="60" height="70" fill="#90a4ae" rx="5"/>
+          <text x="710" y="70" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">BANK</text>
+
+          <rect x="750" y="30" width="70" height="70" fill="#ef5350" rx="5"/>
+          <text x="785" y="65" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">HOSPITAL</text>
+
+          <rect x="830" y="30" width="60" height="70" fill="#8d6e63" rx="5"/>
+          <text x="860" y="70" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">LIBRARY</text>
+
+          <rect x="680" y="320" width="190" height="65" fill="#26a69a" rx="8"/>
+          <text x="775" y="360" font-size="15" font-weight="bold" fill="#fff" text-anchor="middle">SHOPPING MALL</text>
+
+          <rect x="680" y="400" width="190" height="50" fill="#5c6bc0" rx="8"/>
+          <text x="775" y="430" font-size="14" font-weight="bold" fill="#fff" text-anchor="middle">CINEMA (Behind Mall)</text>
+        </svg>
+      </div>
+
+      <!-- EJERCICIOS DEL MAPA (7 ORACIONES COMPLETAS RESTAURADAS) -->
+      <div class="sentence-list">
+        <div class="sentence-card" id="m-item-1">
+          1. <select class="map-exist" data-correct="There is"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> a church <select class="map-prep" data-correct="next to"><option value="">-- Preposición --</option><option value="next to">next to</option><option value="under">under</option></select> the bakery.
+        </div>
+
+        <div class="sentence-card" id="m-item-2">
+          2. <select class="map-exist" data-correct="There is"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> a big school <select class="map-prep" data-correct="in front of"><option value="">-- Preposición --</option><option value="in front of">in front of</option><option value="behind">behind</option></select> the central park.
+        </div>
+
+        <div class="sentence-card" id="m-item-3">
+          3. <select class="map-exist" data-correct="There are"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> two buses <select class="map-prep" data-correct="near"><option value="">-- Preposición --</option><option value="near">near</option><option value="above">above</option></select> the bus stop.
+        </div>
+
+        <div class="sentence-card" id="m-item-4">
+          4. <select class="map-exist" data-correct="There is"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> a hospital <select class="map-prep" data-correct="between"><option value="">-- Preposición --</option><option value="between">between</option><option value="on the left">on the left</option></select> the bank and the library.
+        </div>
+
+        <div class="sentence-card" id="m-item-5">
+          5. <select class="map-exist" data-correct="There is"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> a cinema <select class="map-prep" data-correct="behind"><option value="">-- Preposición --</option><option value="behind">behind</option><option value="under">under</option></select> the shopping mall.
+        </div>
+
+        <div class="sentence-card" id="m-item-6">
+          6. <select class="map-exist" data-correct="There is"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> a bridge <select class="map-prep" data-correct="above"><option value="">-- Preposición --</option><option value="above">above</option><option value="behind">behind</option></select> the river.
+        </div>
+
+        <div class="sentence-card" id="m-item-7">
+          7. <select class="map-exist" data-correct="There is"><option value="">-- Existencia --</option><option value="There is">There is</option><option value="There are">There are</option></select> a bank <select class="map-prep" data-correct="next to"><option value="">-- Preposición --</option><option value="next to">next to</option><option value="under">under</option></select> the hospital.
+        </div>
+      </div>
+
+      <button class="btn-check" onclick="checkTask2()">Check Task 2</button>
+      <div class="result-box" id="resTask2">
+        <div class="score-badge-icfes" id="score2" style="font-size:1.8rem;">0 / 7</div>
+        <p id="msg2"></p>
+      </div>
+    </div>
+
+    <!-- TAREA 3: OCUPACIONES Y VERBO TO BE (5 ÍTEMS) -->
+    <div class="card">
+      <h3>👨‍💼 Task 3: Occupations & Personality Traits (5 Items)</h3>
+      <p>Selecciona el verbo <strong>To Be</strong> y la ocupación correcta:</p>
+      
+      <div class="sentence-list">
+        <div class="sentence-card" id="o-item-1">
+          1. She <select class="occ-verb" data-correct="is"><option value="">-- Verb --</option><option value="is">is</option><option value="are">are</option></select> creative. She is an <select class="occ-job" data-correct="Architect"><option value="">-- Job --</option><option value="Architect">Architect</option><option value="Baker">Baker</option></select>.
+        </div>
+        <div class="sentence-card" id="o-item-2">
+          2. They <select class="occ-verb" data-correct="are"><option value="">-- Verb --</option><option value="is">is</option><option value="are">are</option></select> brave. They are <select class="occ-job" data-correct="Police Officers"><option value="">-- Job --</option><option value="Police Officers">Police Officers</option><option value="Teachers">Teachers</option></select>.
+        </div>
+        <div class="sentence-card" id="o-item-3">
+          3. He <select class="occ-verb" data-correct="is"><option value="">-- Verb --</option><option value="is">is</option><option value="are">are</option></select> patient. He is a <select class="occ-job" data-correct="Doctor"><option value="">-- Job --</option><option value="Doctor">Doctor</option><option value="Mechanic">Mechanic</option></select>.
+        </div>
+        <div class="sentence-card" id="o-item-4">
+          4. I <select class="occ-verb" data-correct="am"><option value="">-- Verb --</option><option value="am">am</option><option value="is">is</option></select> passionate about food. I am a <select class="occ-job" data-correct="Chef"><option value="">-- Job --</option><option value="Chef">Chef</option><option value="Nurse">Nurse</option></select>.
+        </div>
+        <div class="sentence-card" id="o-item-5">
+          5. We <select class="occ-verb" data-correct="are"><option value="">-- Verb --</option><option value="is">is</option><option value="are">are</option></select> analytical. We are <select class="occ-job" data-correct="Engineers"><option value="">-- Job --</option><option value="Engineers">Engineers</option><option value="Bakers">Bakers</option></select>.
+        </div>
+      </div>
+
+      <button class="btn-check" onclick="checkTask3()">Check Task 3</button>
+      <div class="result-box" id="resTask3">
+        <div class="score-badge-icfes" id="score3" style="font-size:1.8rem;">0 / 5</div>
+        <p id="msg3"></p>
+      </div>
+    </div>
+
+    <!-- EVALUACIÓN FINAL TIPO ICFES SABER 11 -->
+    <div class="card" style="border-left-color: var(--unad-orange);">
+      <h3>🏆 Final Exam: Prueba Saber 11 / ICFES (Escala 0 - 500 Puntos)</h3>
+      <p>Responde a los 10 ítems para obtener tu puntaje oficial cualitativo y cuantitativo sobre 500 puntos:</p>
+
+      <form id="icfesForm" style="margin-top: 20px;">
+        
+        <div class="quiz-q">
+          <p>1. Complete: "_______ a museum in front of the park."</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q1" value="A"> A) There are</label>
+            <label><input type="radio" name="q1" value="B"> B) There is</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>2. Where do you go to buy fresh bread?</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q2" value="A"> A) Bakery</label>
+            <label><input type="radio" name="q2" value="B"> B) Post Office</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>3. Complete: "The bridge is _______ the river."</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q3" value="A"> A) above</label>
+            <label><input type="radio" name="q3" value="B"> B) under</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>4. Complete: "She _______ a doctor at the city hospital."</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q4" value="A"> A) is</label>
+            <label><input type="radio" name="q4" value="B"> B) are</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>5. Complete: "They _______ motivated to learn English."</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q5" value="A"> A) is</label>
+            <label><input type="radio" name="q5" value="B"> B) are</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>6. Where do you mail letters and send packages?</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q6" value="A"> A) Post Office</label>
+            <label><input type="radio" name="q6" value="B"> B) Cinema</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>7. Complete: "_______ two buses near the bus stop."</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q7" value="A"> A) There is</label>
+            <label><input type="radio" name="q7" value="B"> B) There are</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>8. What profession designs modern buildings?</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q8" value="A"> A) Architect</label>
+            <label><input type="radio" name="q8" value="B"> B) Chef</label>
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <p>9. The hospital is _______ the bank and the library.</p>
+          <div class="quiz-options">
+            <label><input type="radio" name="q9" value="A"> A) between</label>
+            <label><input type="radio" name="q9" value="B"> B) above</label>
+          </div>
+        </div>
+
+        <!-- ÍTEM 10: SPEAKING EVALUATION -->
+        <div class="quiz-q speaking-box">
+          <p style="color: var(--unad-blue); font-size:1.1rem;">🎙️ Item 10: Speaking Challenge (Pronunciation Test)</p>
+          <p style="font-weight: normal; margin-bottom:10px;">Presiona el botón de micrófono y lee en voz alta la siguiente oración en inglés:<br>
+          <strong style="color:var(--unad-orange); font-size:1.1rem;">"There is a bakery next to the church in my city."</strong></p>
+          
+          <button type="button" class="mic-btn" onclick="startSpeakingTest()">🎙️ Start Speaking (Grabación por Voz)</button>
+          <p id="speakingStatus" style="font-weight: bold; color: var(--unad-blue); margin-top: 8px;">Estado: Esperando grabación...</p>
+          <p id="spokenText" style="font-style: italic; color: #475569; margin-top: 5px;"></p>
+        </div>
+
+        <button type="button" class="btn-check" style="background: linear-gradient(135deg, var(--unad-orange), #d9534f); font-size: 1.2rem; padding: 15px 35px;" onclick="calculateIcfesScore()">🏆 Submit & Calculate Saber 11 Score</button>
+      </form>
+
+      <!-- RESULTADO FINAL OFICIAL SABER 11 -->
+      <div class="result-box" id="icfesResultCard">
+        <h3 style="color: var(--unad-blue);">Puntaje Oficial Saber 11 (ICFES)</h3>
+        <div class="score-badge-icfes" id="icfesScoreDisplay">0 / 500</div>
+        <p id="icfesLevelQualitative" style="font-size: 1.3rem; font-weight: bold; color: var(--unad-blue);"></p>
+        <p id="icfesFeedback" style="margin-top: 10px; font-size: 1.05rem;"></p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // --- SÍNTESIS DE SONIDO WEB AUDIO API ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'success') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(783.99, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(164.81, audioCtx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+      }
+    }
+
+    // --- MÚSICA AMBIENTAL ---
+    let isAmbientPlaying = false;
+    let ambientInterval;
+
+    function toggleAmbientSound() {
+      const btn = document.getElementById('toggleAudioBtn');
+      if (!isAmbientPlaying) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isAmbientPlaying = true;
+        btn.innerText = "Pause Ambient Music";
+        btn.style.background = "var(--unad-orange)";
+        btn.style.color = "white";
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        let idx = 0;
+        ambientInterval = setInterval(() => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(notes[idx % notes.length], audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.8);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 1.8);
+          idx++;
+        }, 1200);
+      } else {
+        isAmbientPlaying = false;
+        clearInterval(ambientInterval);
+        btn.innerText = "Play Ambient Music";
+        btn.style.background = "var(--unad-yellow)";
+        btn.style.color = "var(--unad-blue)";
+      }
+    }
+
+    // --- RULETA DE EMOCIONES ---
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const emotions = [
+      { text: "Motivated", color: "#3b82f6" },
+      { text: "Happy", color: "#10b981" },
+      { text: "Calm", color: "#06b6d4" },
+      { text: "Confident", color: "#f59e0b" }
+    ];
+
+    function drawWheel() {
+      const numOptions = emotions.length;
+      const arcSize = (2 * Math.PI) / numOptions;
+      for (let i = 0; i < numOptions; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = emotions[i].color;
+        ctx.moveTo(140, 140);
+        ctx.arc(140, 140, 130, i * arcSize, (i + 1) * arcSize);
+        ctx.fill();
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.font = "bold 15px sans-serif";
+        ctx.translate(140, 140);
+        ctx.rotate(i * arcSize + arcSize / 2);
+        ctx.fillText(emotions[i].text, 45, 5);
+        ctx.restore();
+      }
+    }
+    drawWheel();
+
+    function spinWheel() {
+      let angle = 0;
+      const spinAngle = Math.floor(Math.random() * 360) + 1440;
+      const duration = 2000;
+      const start = performance.now();
+
+      function animate(time) {
+        const elapsed = time - start;
+        if (elapsed < duration) {
+          angle = (spinAngle * (1 - Math.pow(1 - elapsed / duration, 3))) % 360;
+          canvas.style.transform = `rotate(${angle}deg)`;
+          requestAnimationFrame(animate);
+        } else {
+          const selectedIdx = Math.floor(Math.random() * emotions.length);
+          const selectedEmotion = emotions[selectedIdx].text;
+          const msgDiv = document.getElementById('feelingsResult');
+          msgDiv.innerHTML = `🌟 Today you feel <u>${selectedEmotion}</u>! <br> "I <strong>am</strong> ${selectedEmotion.toLowerCase()} and ready for A2 English!"`;
+          msgDiv.style.display = "block";
+          playSound('success');
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    // --- DRAG AND DROP ---
+    const draggables = document.querySelectorAll('.draggable');
+    const dropTargets = document.querySelectorAll('.drop-target');
+
+    draggables.forEach(drag => {
+      drag.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', e.target.innerText);
+      });
+    });
+
+    dropTargets.forEach(target => {
+      target.addEventListener('dragover', (e) => e.preventDefault());
+      target.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const text = e.dataTransfer.getData('text/plain');
+        target.innerText = text;
+        target.style.background = "#e0f2fe";
+      });
+    });
+
+    function checkTask1() {
+      let score = 0;
+      dropTargets.forEach(target => {
+        if (target.innerText.trim() === target.getAttribute('data-match')) {
+          score++;
+          target.style.background = "#dcfce7";
+        } else {
+          target.style.background = "#fee2e2";
+        }
+      });
+      document.getElementById('score1').innerText = `${score} / ${dropTargets.length}`;
+      document.getElementById('resTask1').style.display = "block";
+      if (score === dropTargets.length) playSound('success'); else playSound('error');
+    }
+
+    // --- VERIFICACIÓN TAREA 2 (7 ÍTEMS RESTAURADOS) ---
+    function checkTask2() {
+      let score = 0;
+      const total = 7;
+      for (let i = 1; i <= total; i++) {
+        const item = document.getElementById(`m-item-${i}`);
+        const exist = item.querySelector('.map-exist');
+        const prep = item.querySelector('.map-prep');
+        if (exist.value === exist.getAttribute('data-correct') && prep.value === prep.getAttribute('data-correct')) {
+          score++;
+          item.style.background = "#f0fdf4";
+        } else {
+          item.style.background = "#fef2f2";
+        }
+      }
+      document.getElementById('score2').innerText = `${score} / ${total}`;
+      document.getElementById('resTask2').style.display = "block";
+      if (score === total) playSound('success'); else playSound('error');
+    }
+
+    function checkTask3() {
+      let score = 0;
+      for (let i = 1; i <= 5; i++) {
+        const item = document.getElementById(`o-item-${i}`);
+        const verb = item.querySelector('.occ-verb');
+        const job = item.querySelector('.occ-job');
+        if (verb.value === verb.getAttribute('data-correct') && job.value === job.getAttribute('data-correct')) {
+          score++;
+          item.style.background = "#f0fdf4";
+        } else {
+          item.style.background = "#fef2f2";
+        }
+      }
+      document.getElementById('score3').innerText = `${score} / 5`;
+      document.getElementById('resTask3').style.display = "block";
+      if (score === 5) playSound('success'); else playSound('error');
+    }
+
+    // --- SPEAKING CON IA Y RECONOCIMIENTO DE VOZ ---
+    let speakingPassed = false;
+
+    function startSpeakingTest() {
+      const status = document.getElementById('speakingStatus');
+      const textOutput = document.getElementById('spokenText');
+
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        status.innerText = "❌ Tu navegador no soporta micrófono. Se otorgarán los puntos por defecto.";
+        status.style.color = "var(--incorrect)";
+        speakingPassed = true;
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      status.innerText = "🎙️ Escuchando... Por favor pronuncia la frase en inglés ahora.";
+      status.style.color = "var(--unad-orange)";
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        textOutput.innerText = `Has dicho: "${transcript}"`;
+        
+        if (transcript.includes("there is") || transcript.includes("bakery") || transcript.includes("church") || transcript.includes("city")) {
+          status.innerText = "✅ ¡Excelente pronunciación! Ítem 10 aprobado.";
+          status.style.color = "var(--correct)";
+          speakingPassed = true;
+          playSound('success');
+        } else {
+          status.innerText = "⚠️ Pronunciación detectada. Ítem procesado.";
+          status.style.color = "var(--unad-orange)";
+          speakingPassed = true;
+        }
+      };
+
+      recognition.onerror = function() {
+        status.innerText = "⚠️ Error de micrófono o silencio. Intenta hablar nuevamente.";
+        status.style.color = "var(--incorrect)";
+      };
+    }
+
+    // --- PUNTAJE SABER 11 (0 A 500 PUNTOS) ---
+    function calculateIcfesScore() {
+      const answers = { q1:'B', q2:'A', q3:'A', q4:'A', q5:'B', q6:'A', q7:'B', q8:'A', q9:'A' };
+      let correctCount = 0;
+      const form = document.getElementById('icfesForm');
+
+      for (let key in answers) {
+        const selected = form.querySelector(`input[name="${key}"]:checked`);
+        if (selected && selected.value === answers[key]) {
+          correctCount++;
+        }
+      }
+
+      if (speakingPassed) correctCount++;
+
+      const icfesScore = correctCount * 50;
+
+      const card = document.getElementById('icfesResultCard');
+      const scoreDisplay = document.getElementById('icfesScoreDisplay');
+      const qualDisplay = document.getElementById('icfesLevelQualitative');
+      const feedback = document.getElementById('icfesFeedback');
+
+      scoreDisplay.innerText = `${icfesScore} / 500 Puntos`;
+
+      if (icfesScore >= 450) {
+        qualDisplay.innerText = "Nivel ICFES: A2 Avanzado - Desempeño Superior 🏆";
+        feedback.innerText = "¡Felicitaciones! Has demostrado dominio completo del vocabulario urbano, 'there is/are', preposiciones y pronunciación.";
+      } else if (icfesScore >= 300) {
+        qualDisplay.innerText = "Nivel ICFES: A2 Intermedio - Desempeño Alto 🌟";
+        feedback.innerText = "¡Buen trabajo! Tienes una base sólida en inglés A2. Sigue practicando las preposiciones para perfeccionar.";
+      } else {
+        qualDisplay.innerText = "Nivel ICFES: A2 Inicial - En Proceso 📚";
+        feedback.innerText = "Sigue repasando los módulos gráficos interactivos arriba para consolidar tu aprendizaje.";
+      }
+
+      card.style.display = "block";
+      card.scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
